@@ -1,22 +1,23 @@
 class SpiralCounter
   def initialize
     @value = 0
-    @x = 0
-    @y = 0
+    @row = 0
+    @col = 0
     @direction = :up
-    @map = {[@x, @y] => @value}
+    @map = {@row => {@col => @value}}
   end
 
   def increment
     @value += 1
     direction = next_direction(@direction)
-    x, y = next_coords(@x, @y, direction)
-    if @map[[x, y]]
+    row, col = next_position(@row, @col, direction)
+    if @map[row] && @map[row][col]
       direction = @direction
-      x, y = next_coords(@x, @y, direction)
+      row, col = next_position(@row, @col, direction)
     end
-    @map[[x, y]] = @value
-    @x, @y, @direction = x, y, direction
+    @map[row] = {} unless @map[row]
+    @map[row][col] = @value
+    @row, @col, @direction = row, col, direction
   end
 
   def to_s
@@ -32,17 +33,17 @@ class SpiralCounter
      :left  => :up}[direction]
   end
 
-  def next_coords(x, y, direction)
+  def next_position(row, col, direction)
     case direction
     when :up
-      y -= 1
+      row -= 1
     when :right
-      x += 1
+      col += 1
     when :down
-      y += 1
+      row += 1
     when :left
-      x -= 1
+      col -= 1
     end
-    [x, y]
+    [row, col]
   end
 end
