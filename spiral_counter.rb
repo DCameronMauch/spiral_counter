@@ -8,6 +8,7 @@ class SpiralCounter
   end
 
   def increment
+    clear_memo
     @value += 1
     direction = next_direction(@direction)
     row, col = next_position(@row, @col, direction)
@@ -30,18 +31,22 @@ class SpiralCounter
 
   private
 
+  def clear_memo
+    @rows = @cols = @width = nil
+  end
+
   def rows
-    @map.keys.sort
+    @rows ||= @map.keys.sort
   end
 
   def cols
-    @map.reduce([]) { |memo, (_, cols)|
+    @cols ||= @map.reduce([]) { |memo, (_, cols)|
       memo += cols.keys
     }.uniq.sort
   end
 
   def width
-    @value.to_s.length
+    @width ||= @value.to_s.length
   end
 
   def next_direction(direction)
