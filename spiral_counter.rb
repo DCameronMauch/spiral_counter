@@ -21,10 +21,28 @@ class SpiralCounter
   end
 
   def to_s
-    @map.inspect
+    rows.map { |row|
+      cols.map { |col|
+        "%#{width}s" % @map[row][col]
+      }.join(' ')
+    }.join("\n")
   end
 
   private
+
+  def rows
+    @map.keys.sort
+  end
+
+  def cols
+    @map.reduce([]) { |memo, (_, cols)|
+      memo += cols.keys
+    }.uniq.sort
+  end
+
+  def width
+    @value.to_s.length
+  end
 
   def next_direction(direction)
     {:up    => :right,
