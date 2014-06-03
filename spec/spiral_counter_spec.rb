@@ -1,4 +1,4 @@
-require_relative 'spiral_counter'
+require_relative '../spiral_counter'
 
 describe SpiralCounter do
   context 'increment never called' do
