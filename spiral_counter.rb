@@ -9,16 +9,10 @@ class SpiralCounter
 
   def increment
     clear_memo
+    turn_or_forward
     @value += 1
-    direction = next_direction(@direction)
-    row, col = next_position(@row, @col, direction)
-    if @map[row] && @map[row][col]
-      direction = @direction
-      row, col = next_position(@row, @col, direction)
-    end
-    @map[row] = {} unless @map[row]
-    @map[row][col] = @value
-    @row, @col, @direction = row, col, direction
+    @map[@row] = {} unless @map[@row]
+    @map[@row][@col] = @value
   end
 
   def to_s
@@ -30,6 +24,18 @@ class SpiralCounter
   end
 
   private
+
+  def turn_or_forward
+    direction = next_direction(@direction)
+    turn = next_position(direction)
+    forward = next_position(@direction)
+    @row, @col = taken(*turn) ? forward : turn
+    @direction = direction unless taken(*turn)
+  end
+
+  def taken(row, col)
+    @map[row] && @map[row][col]
+  end
 
   def clear_memo
     @rows = @cols = @width = nil
@@ -56,7 +62,9 @@ class SpiralCounter
      :left  => :up}[direction]
   end
 
-  def next_position(row, col, direction)
+  def next_position(direction)
+    row = @row
+    col = @col
     case direction
     when :up
       row -= 1
